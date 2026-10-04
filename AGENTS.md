@@ -36,5 +36,7 @@
 
 ## Related context
 
-- Shared Gitea/Git operations knowledge base (used by sibling projects):
-  `/Users/liangfuwang/VibeCoding/gitea/AGENTS.md` (if present).
+Gitea / Git 操作（建库、提交、推送、认证、排错）请先阅读：
+/Users/liangfuwang/VibeCoding/gitea/AGENTS.md
+
+远程：`https://liangfuwang.xyz:3000/wanglf/time-bar.git`（仅 HTTPS + Token，禁用 SSH 传输）。
