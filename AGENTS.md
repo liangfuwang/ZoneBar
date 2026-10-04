@@ -5,7 +5,7 @@
 ## Project
 
 - **Name:** ZoneBar
-- **Purpose:** macOS menu-bar clock with user-defined time zones (e.g. America/Los_Angeles).
+- **Purpose:** macOS menu-bar clock with user-defined time zones (e.g. America/Los_Angeles). Motivation: keep US local time in view while using Claude Code, to avoid heavy usage during US late-night hours (account-ban risk).
 - **Stack:** Swift 5.9 + AppKit, Swift Package Manager (no Xcode project), macOS 13+.
 
 ## Layout
