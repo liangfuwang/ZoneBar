@@ -1,4 +1,4 @@
-# time-bar
+# ZoneBar
 
 macOS 常驻菜单栏时钟，支持自定义时区（如美国洛杉矶时间）。
 
@@ -14,8 +14,8 @@ macOS 常驻菜单栏时钟，支持自定义时区（如美国洛杉矶时间�
 ## 构建与运行
 
 ```sh
-./scripts/build-app.sh      # 生成 build/TimeBar.app
-open build/TimeBar.app
+./scripts/build-app.sh      # 生成 build/ZoneBar.app
+open build/ZoneBar.app
 ```
 
 开发时也可直接 `swift run --build-system native`。

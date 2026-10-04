@@ -4,22 +4,22 @@
 
 ## Project
 
-- **Name:** time-bar
+- **Name:** ZoneBar
 - **Purpose:** macOS menu-bar clock with user-defined time zones (e.g. America/Los_Angeles).
 - **Stack:** Swift 5.9 + AppKit, Swift Package Manager (no Xcode project), macOS 13+.
 
 ## Layout
 
-- `Sources/TimeBar/main.swift` — entry; sets `.accessory` activation policy (no Dock icon).
-- `Sources/TimeBar/AppDelegate.swift` — `NSStatusItem`, 1s timer (added in `.common` mode so it ticks while the menu is open), menu building, add/remove zone actions, login-item toggle (`SMAppService`).
-- `Sources/TimeBar/Settings.swift` — UserDefaults-backed settings (zones, primary zone, 24h, seconds, city name).
-- `scripts/build-app.sh` — builds release binary and wraps it into `build/TimeBar.app` (Info.plist with `LSUIElement`, ad-hoc codesign).
+- `Sources/ZoneBar/main.swift` — entry; sets `.accessory` activation policy (no Dock icon).
+- `Sources/ZoneBar/AppDelegate.swift` — `NSStatusItem`, 1s timer (added in `.common` mode so it ticks while the menu is open), menu building, add/remove zone actions, login-item toggle (`SMAppService`).
+- `Sources/ZoneBar/Settings.swift` — UserDefaults-backed settings (zones, primary zone, 24h, seconds, city name).
+- `scripts/build-app.sh` — builds release binary and wraps it into `build/ZoneBar.app` (Info.plist with `LSUIElement`, ad-hoc codesign).
 
 ## Commands
 
 - Build + bundle: `./scripts/build-app.sh`
-- Run: `open build/TimeBar.app` (or `swift run --build-system native`)
-- Quit running instance: `pkill TimeBar`
+- Run: `open build/ZoneBar.app` (or `swift run --build-system native`)
+- Quit running instance: `pkill ZoneBar`
 
 ## Conventions
 

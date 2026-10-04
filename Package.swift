@@ -2,9 +2,9 @@
 import PackageDescription
 
 let package = Package(
-    name: "TimeBar",
+    name: "ZoneBar",
     platforms: [.macOS(.v13)],
     targets: [
-        .executableTarget(name: "TimeBar", path: "Sources/TimeBar")
+        .executableTarget(name: "ZoneBar", path: "Sources/ZoneBar")
     ]
 )
