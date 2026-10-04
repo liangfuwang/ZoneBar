@@ -2,6 +2,10 @@
 
 macOS 常驻菜单栏时钟，支持自定义时区（如美国洛杉矶时间）。
 
+<p align="center">
+  <img src="docs/screenshot.png" alt="ZoneBar 菜单栏截图" width="364">
+</p>
+
 ## 初衷
 
 使用 Claude Code 时，随时留意美国当地时间，避免在美国深夜仍大量调用，降低账号被风控或封禁的风险。ZoneBar 把美国时区常驻在菜单栏，一眼就能看到现在是美国几点。
