@@ -57,7 +57,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         timer = t
     }
 
+    // DateFormatter is expensive to create; reuse instances across ticks.
+    private var timeFormatters: [String: DateFormatter] = [:]
+    private var dayFormatters: [String: DateFormatter] = [:]
+
     private func formatter(for id: String, seconds: Bool) -> DateFormatter {
+        let key = "\(id)|\(seconds)|\(settings.use24Hour)"
+        if let cached = timeFormatters[key] { return cached }
         let f = DateFormatter()
         f.locale = Locale(identifier: "en_US_POSIX")
         f.timeZone = TimeZone(identifier: id)
@@ -65,6 +71,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let s = seconds ? ":ss" : ""
         let ampm = settings.use24Hour ? "" : " a"
         f.dateFormat = hm + s + ampm
+        timeFormatters[key] = f
+        return f
+    }
+
+    private func dayFormatter(for tz: TimeZone) -> DateFormatter {
+        if let cached = dayFormatters[tz.identifier] { return cached }
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "zh_CN")
+        f.timeZone = tz
+        f.dateFormat = "M月d日 EEE"
+        dayFormatters[tz.identifier] = f
         return f
     }
 
@@ -82,12 +99,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private func zoneLine(_ id: String, now: Date) -> String {
         guard let tz = TimeZone(identifier: id) else { return id }
         let time = formatter(for: id, seconds: true).string(from: now)
-        let day = DateFormatter()
-        day.locale = Locale(identifier: "zh_CN")
-        day.timeZone = tz
-        day.dateFormat = "M月d日 EEE"
         let abbr = tz.abbreviation(for: now) ?? ""
-        return "\(displayName(id))   \(time)   \(day.string(from: now))  \(abbr)"
+        return "\(displayName(id))   \(time)   \(dayFormatter(for: tz).string(from: now))  \(abbr)"
     }
 
     // MARK: - Menu
@@ -110,7 +123,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             item.target = self
             item.representedObject = id
             item.state = id == settings.primary ? .on : .off
-            item.attributedTitle = nil
             menu.addItem(item)
             zoneItems.append((id, item))
         }
