@@ -15,9 +15,11 @@
 - `Sources/ZoneBar/Settings.swift` — UserDefaults-backed settings (zones, primary zone, 24h, seconds, city name).
 - `scripts/build-app.sh` — builds release binary and wraps it into `build/ZoneBar.app` (Info.plist with `LSUIElement`, ad-hoc codesign).
 
+- `Resources/AppIcon.icns` — app icon (committed). Regenerate with `swift scripts/make-icon.swift` (drawn in code, edit that script to change the design).
+
 ## Commands
 
-- Build + bundle: `./scripts/build-app.sh`
+- Build + bundle: `./scripts/build-app.sh` (override version: `VERSION=1.2.0 BUILD=3 ./scripts/build-app.sh`)
 - Run: `open build/ZoneBar.app` (or `swift run --build-system native`)
 - Quit running instance: `pkill ZoneBar`
 
