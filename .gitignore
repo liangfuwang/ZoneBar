@@ -30,3 +30,6 @@ yarn-error.log*
 coverage/
 
 .build/
+
+# Local handoff notes
+HANDOFF.md
