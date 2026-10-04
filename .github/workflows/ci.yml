@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Swift version
+        run: swift --version
+
+      - name: Build app bundle
+        run: ./scripts/build-app.sh
+
+      - name: Verify bundle
+        run: |
+          test -x build/ZoneBar.app/Contents/MacOS/ZoneBar
+          test -f build/ZoneBar.app/Contents/Resources/AppIcon.icns
+          plutil -lint build/ZoneBar.app/Contents/Info.plist
