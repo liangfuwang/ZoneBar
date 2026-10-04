@@ -28,15 +28,10 @@
 - Zones are stored as IANA identifiers; display names for presets live in `presets` in `AppDelegate.swift`.
 - Login-item registration only works when run as the bundled `.app`.
 
-## Environment notes
+## Requirements
 
-- macOS, zsh, Node via nvm (`v22.19.0`).
-- Local proxy at `127.0.0.1:10808` may be needed for network access from Node
-  (`NODE_USE_ENV_PROXY=1`).
+- macOS 13+, Xcode Command Line Tools (Swift 5.9+).
 
-## Related context
+## License
 
-Gitea / Git 操作（建库、提交、推送、认证、排错）请先阅读：
-/Users/liangfuwang/VibeCoding/gitea/AGENTS.md
-
-远程：`https://liangfuwang.xyz:3000/wanglf/time-bar.git`（仅 HTTPS + Token，禁用 SSH 传输）。
+MIT, see `LICENSE`.

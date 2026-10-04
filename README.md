@@ -21,3 +21,7 @@ open build/TimeBar.app
 开发时也可直接 `swift run --build-system native`。
 
 要求：macOS 13+，Xcode Command Line Tools（Swift 5.9+）。
+
+## 许可证
+
+[MIT](LICENSE)
