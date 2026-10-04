@@ -155,7 +155,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(toggle("开机自启动", SMAppService.mainApp.status == .enabled, #selector(toggleLogin)))
 
         menu.addItem(.separator())
-        let quit = NSMenuItem(title: "退出 TimeBar", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        let quit = NSMenuItem(title: "退出 ZoneBar", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         menu.addItem(quit)
     }
 
@@ -236,7 +236,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             NSApp.activate(ignoringOtherApps: true)
             let a = NSAlert()
             a.messageText = "无法设置开机自启动"
-            a.informativeText = "请使用 scripts/build-app.sh 构建的 TimeBar.app 运行。\n\(error.localizedDescription)"
+            a.informativeText = "请使用 scripts/build-app.sh 构建的 ZoneBar.app 运行。\n\(error.localizedDescription)"
             a.runModal()
         }
     }
