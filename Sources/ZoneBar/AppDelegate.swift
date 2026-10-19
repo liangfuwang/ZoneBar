@@ -25,8 +25,10 @@ private let presets: [(String, String)] = [
     ("UTC", "UTC"),
 ]
 
+private let presetNames = Dictionary(presets, uniquingKeysWith: { a, _ in a })
+
 private func displayName(_ id: String) -> String {
-    if let p = presets.first(where: { $0.0 == id }) { return p.1 }
+    if let name = presetNames[id] { return name }
     return id.split(separator: "/").last.map { $0.replacingOccurrences(of: "_", with: " ") } ?? id
 }
 
@@ -53,6 +55,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Align first fire to the next whole second, then repeat every second.
         let next = Date(timeIntervalSince1970: floor(Date().timeIntervalSince1970) + 1)
         let t = Timer(fire: next, interval: 1, repeats: true) { [weak self] _ in self?.tick() }
+        t.tolerance = 0.1 // lets the system coalesce wakeups to save energy
         RunLoop.main.add(t, forMode: .common) // .common keeps ticking while the menu is open
         timer = t
     }
@@ -62,26 +65,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var dayFormatters: [String: DateFormatter] = [:]
 
     private func formatter(for id: String, seconds: Bool) -> DateFormatter {
-        let key = "\(id)|\(seconds)|\(settings.use24Hour)"
+        let use24Hour = settings.use24Hour
+        let key = "\(id)|\(seconds)|\(use24Hour)"
         if let cached = timeFormatters[key] { return cached }
         let f = DateFormatter()
         f.locale = Locale(identifier: "en_US_POSIX")
         f.timeZone = TimeZone(identifier: id)
-        let hm = settings.use24Hour ? "HH:mm" : "h:mm"
+        let hm = use24Hour ? "HH:mm" : "h:mm"
         let s = seconds ? ":ss" : ""
-        let ampm = settings.use24Hour ? "" : " a"
+        let ampm = use24Hour ? "" : " a"
         f.dateFormat = hm + s + ampm
         timeFormatters[key] = f
         return f
     }
 
-    private func dayFormatter(for tz: TimeZone) -> DateFormatter {
-        if let cached = dayFormatters[tz.identifier] { return cached }
+    private func dayFormatter(for id: String) -> DateFormatter? {
+        if let cached = dayFormatters[id] { return cached }
+        guard let tz = TimeZone(identifier: id) else { return nil }
         let f = DateFormatter()
         f.locale = Locale(identifier: "zh_CN")
         f.timeZone = tz
         f.dateFormat = "M月d日 EEE"
-        dayFormatters[tz.identifier] = f
+        dayFormatters[id] = f
         return f
     }
 
@@ -89,25 +94,36 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let now = Date()
         let id = settings.primary
         let time = formatter(for: id, seconds: settings.showSeconds).string(from: now)
-        statusItem.button?.title = settings.showCity ? "\(displayName(id)) \(time)" : time
+        let title = settings.showCity ? "\(displayName(id)) \(time)" : time
+        // Without seconds the title only changes once a minute; skip redundant redraws.
+        if let button = statusItem.button, button.title != title { button.title = title }
 
+        // Dropdown lines are only visible while the menu is open (menuWillOpen refreshes them).
+        guard menuIsOpen else { return }
         for (zid, item) in zoneItems {
             item.title = zoneLine(zid, now: now)
         }
     }
 
     private func zoneLine(_ id: String, now: Date) -> String {
-        guard let tz = TimeZone(identifier: id) else { return id }
+        guard let day = dayFormatter(for: id) else { return id }
         let time = formatter(for: id, seconds: true).string(from: now)
-        let abbr = tz.abbreviation(for: now) ?? ""
-        return "\(displayName(id))   \(time)   \(dayFormatter(for: tz).string(from: now))  \(abbr)"
+        let abbr = day.timeZone.abbreviation(for: now) ?? ""
+        return "\(displayName(id))   \(time)   \(day.string(from: now))  \(abbr)"
     }
 
     // MARK: - Menu
 
+    private var menuIsOpen = false
+
     func menuWillOpen(_ menu: NSMenu) {
+        menuIsOpen = true
         rebuildMenu()
         tick()
+    }
+
+    func menuDidClose(_ menu: NSMenu) {
+        menuIsOpen = false
     }
 
     private func rebuildMenu() {
@@ -223,7 +239,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         alert.window.initialFirstResponder = combo
 
         guard alert.runModal() == .alertFirstButtonReturn else { return }
-        let id = combo.stringValue.trimmingCharacters(in: .whitespaces)
+        let id = combo.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
         if TimeZone(identifier: id) != nil {
             append(id)
         } else {
