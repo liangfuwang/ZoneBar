@@ -31,5 +31,8 @@ coverage/
 
 .build/
 
-# Local handoff notes
+# Local agent context / handoff notes (never publish)
+AGENTS.md
+CLAUDE.md
+CODEBUDDY.md
 HANDOFF.md
